@@ -1,10 +1,171 @@
-
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="filedatechanger_gui.MainWindow"
-        Title="filedatechanger_gui">
-    Welcome to Avalonia!
+		xmlns:local="clr-namespace:filedatechangergui"
+		xmlns:sty="using:FluentAvalonia.Styling"
+		xmlns:ui="using:FluentAvalonia.UI.Controls"
+        xmlns:uip="using:FluentAvalonia.UI.Controls.Primitives"
+        xmlns:wnd="using:FluentAvalonia.UI.Windowing"
+        mc:Ignorable="d"
+        x:Class="filedatechangergui.MainWindow"
+        Title="File Date Changer"
+		MinWidth="450" MinHeight="50"
+		Width="450" Height="500">
+
+	<Window.DataContext>
+		<local:MainWindowViewModel />
+	</Window.DataContext>
+
+	<Window.Resources>
+		<x:Double x:Key="DatePickerThemeMinWidth">120</x:Double>
+		<x:Double x:Key="TimePickerThemeMinWidth">160</x:Double>
+		<Thickness x:Key="DatePickerHostPadding">25,3,0,6</Thickness>
+	</Window.Resources>
+
+	<Window.Styles>
+		<Style Selector="Border.RoundedCard">
+			<Setter Property="Background" Value="{DynamicResource SolidBackgroundFillColorTertiaryBrush}" />
+			<Setter Property="BorderThickness" Value="1" />
+			<Setter Property="BorderBrush" Value="{DynamicResource SurfaceStrokeColorFlyoutBrush}" />
+			<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+			<Setter Property="Padding" Value="12" />
+		</Style>
+
+		<Style Selector="Expander /template/ ToggleButton#PART_toggle">
+			<Setter Property="Background" Value="{DynamicResource SolidBackgroundFillColorTertiaryBrush}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource SurfaceStrokeColorFlyoutBrush}" />
+		</Style>
+		
+		<Style Selector="TimePicker /template/ TimePickerPresenter">
+			<Setter Property="MinWidth" Value="{DynamicResource TimePickerThemeMinWidth}" />
+			<Setter Property="Width" Value="{DynamicResource TimePickerThemeMinWidth}" />
+		</Style>
+		
+		<Style Selector="ListBoxItem.HourItem /template/ ContentPresenter">
+			<Setter Property="Padding" Value="4,0,0,0" />
+		</Style>
+
+		<Style Selector="ListBoxItem.MinuteItem /template/ ContentPresenter">
+			<Setter Property="Padding" Value="4,0,0,0" />
+		</Style>
+	</Window.Styles>
+	
+	<Grid Name="ContentContainer">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<ScrollViewer Padding="12,12,12,0" AllowAutoHide="True" Grid.Row="0">
+			<StackPanel Spacing="4">
+				
+				<Border Classes="RoundedCard">
+					<StackPanel>
+						<Label>
+							browse files placeholder make this whole card a button with a magnifier glass icon
+						</Label>
+						<Button Name="browseFiles"
+								Content="Browse Files"
+								IsEnabled="{Binding EnableBrowseFiles}"
+								Command="{Binding BrowseFilesCommand}"
+								CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" />
+					</StackPanel>
+				</Border>
+
+				<Button HorizontalAlignment="Stretch"
+						IsEnabled="{Binding EnableBrowseFiles}"
+						BorderBrush="{DynamicResource SurfaceStrokeColorFlyoutBrush}"
+						Background="{DynamicResource SolidBackgroundFillColorTertiaryBrush}" Height="50"
+						HorizontalContentAlignment="Stretch" Padding="12"
+						Command="{Binding BrowseFilesCommand}"
+						CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+					<Button.Resources>
+						
+					</Button.Resources>
+					<Button.Styles>
+						<Style Selector="Button:disabled">
+							<Setter Property="BorderBrush" Value="red" />
+						</Style>
+					</Button.Styles>
+					<DockPanel>
+						<TextBlock Text="Browse Files" FontWeight="SemiBold" Margin="4,0,0,0" />
+						<!--<ui:SymbolIcon Symbol="Find" Margin="6,0,0,0" FontSize="16" />-->
+						<ui:SymbolIcon Symbol="ChevronRight" HorizontalAlignment="Right" />
+					</DockPanel>
+				</Button>
+
+				<Expander Padding="4">
+					<Expander.Header>
+						<StackPanel Orientation="Horizontal" Margin="4,0,0,0">
+							<TextBlock Text="{Binding SelectedFiles.Count}" FontWeight="SemiBold" />
+							<TextBlock Text=" Files" FontWeight="Normal" />
+						</StackPanel>
+					</Expander.Header>
+					<ListBox ItemsSource="{Binding SelectedFiles}">
+						<ListBox.ItemTemplate>
+							<DataTemplate>
+								<Grid ToolTip.Tip="{Binding Path}" Background="Transparent" Margin="-4,0,-4,-4">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="*" />
+									</Grid.ColumnDefinitions>
+									<TextBlock Grid.Column="0" Text="{Binding Name}" />
+								</Grid>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+				</Expander>
+
+				<Border Classes="RoundedCard">
+					<DockPanel>
+						<TextBlock VerticalAlignment="Center" Margin="4,0,0,0" FontWeight="SemiBold">
+							Attributes to change
+						</TextBlock>
+						<StackPanel HorizontalAlignment="Right" Orientation="Vertical" Margin="0,-6,0,-6">
+							<CheckBox IsChecked="{Binding ChangeCreationTime}">
+								<TextBlock Text="Created" Margin="0,1,0,0" />
+							</CheckBox>
+							<CheckBox IsChecked="{Binding ChangeModifiedTime}" Margin="0,-4">
+								<TextBlock Text="Modified" Margin="0,1,0,0" />
+							</CheckBox>
+							<CheckBox IsChecked="{Binding ChangeAccessedTime}">
+								<TextBlock Text="Accessed" Margin="0,1,0,0" />
+							</CheckBox>
+						</StackPanel>
+					</DockPanel>
+				</Border>
+
+				<Border Classes="RoundedCard">
+					<StackPanel>
+						<DockPanel Margin="4,0,0,0">
+							<TextBlock Text="New Date" VerticalAlignment="Center" FontWeight="SemiBold" />
+							<CalendarDatePicker x:Name="newDatePicker"
+												HorizontalAlignment="Right"
+												SelectedDate="{Binding NewDate}" />
+						</DockPanel>
+						<Separator Margin="0,12" />
+						<DockPanel Margin="4,0,0,0">
+							<TextBlock Text="New Time" VerticalAlignment="Center" FontWeight="SemiBold" />
+							<TimePicker x:Name="newTimePicker"
+										HorizontalAlignment="Right"
+										SelectedTime="{Binding NewTime}"
+									    ClockIdentifier="12HourClock">
+							</TimePicker>
+						</DockPanel>
+					</StackPanel>
+				</Border>
+				
+			</StackPanel>
+		</ScrollViewer>
+
+		<Grid Grid.Row="1" Margin="12">
+			<StackPanel VerticalAlignment="Bottom">
+				<TextBlock Text="Theme" Margin="4,0,0,4" />
+				<ComboBox ItemsSource="{Binding AvailableThemes}"
+						  SelectedItem="{Binding CurrentTheme}" />
+			</StackPanel>
+			<Button Content="Apply" IsEnabled="{Binding EnableApplyChange}"
+					HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="150"
+					Command="{Binding ApplyChangesCommand}" />
+		</Grid>
+	</Grid>
 </Window>

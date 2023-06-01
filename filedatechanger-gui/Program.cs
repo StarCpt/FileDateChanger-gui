@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using System;
 
-namespace filedatechanger_gui
+namespace filedatechangergui
 {
     internal class Program
     {

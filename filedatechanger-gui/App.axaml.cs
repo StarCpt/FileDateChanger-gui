@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 
-namespace filedatechanger_gui
+namespace filedatechangergui
 {
     public partial class App : Application
     {
