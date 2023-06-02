@@ -3,9 +3,11 @@
              x:Class="filedatechangergui.App"
 			 xmlns:ui="using:FluentAvalonia.UI.Controls"
              xmlns:sty="using:FluentAvalonia.Styling"
+			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
 			 RequestedThemeVariant="Dark">
     <Application.Styles>
 		<sty:FluentAvaloniaTheme PreferUserAccentColor="True" />
+		<materialIcons:MaterialIconStyles />
         <!--<FluentTheme Mode="Light"/>-->
     </Application.Styles>
 </Application>

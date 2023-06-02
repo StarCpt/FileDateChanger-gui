@@ -7,11 +7,12 @@
 		xmlns:ui="using:FluentAvalonia.UI.Controls"
         xmlns:uip="using:FluentAvalonia.UI.Controls.Primitives"
         xmlns:wnd="using:FluentAvalonia.UI.Windowing"
+		xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         mc:Ignorable="d"
         x:Class="filedatechangergui.MainWindow"
         Title="File Date Changer"
-		MinWidth="450" MinHeight="50"
-		Width="450" Height="500">
+		MinWidth="550" MinHeight="200"
+		Width="750" Height="450">
 
 	<Window.DataContext>
 		<local:MainWindowViewModel />
@@ -31,11 +32,6 @@
 			<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
 			<Setter Property="Padding" Value="12" />
 		</Style>
-
-		<Style Selector="Expander /template/ ToggleButton#PART_toggle">
-			<Setter Property="Background" Value="{DynamicResource SolidBackgroundFillColorTertiaryBrush}" />
-			<Setter Property="BorderBrush" Value="{DynamicResource SurfaceStrokeColorFlyoutBrush}" />
-		</Style>
 		
 		<Style Selector="TimePicker /template/ TimePickerPresenter">
 			<Setter Property="MinWidth" Value="{DynamicResource TimePickerThemeMinWidth}" />
@@ -50,122 +46,105 @@
 			<Setter Property="Padding" Value="4,0,0,0" />
 		</Style>
 	</Window.Styles>
-	
-	<Grid Name="ContentContainer">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*" />
-			<RowDefinition Height="Auto" />
-		</Grid.RowDefinitions>
-		<ScrollViewer Padding="12,12,12,0" AllowAutoHide="True" Grid.Row="0">
-			<StackPanel Spacing="4">
+
+	<DockPanel Margin="12">
+		<Grid Name="ContentContainer" DockPanel.Dock="Left" Width="330">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+		
+			<ScrollViewer AllowAutoHide="True" Grid.Row="0">
+				<StackPanel Spacing="4">
 				
-				<Border Classes="RoundedCard">
-					<StackPanel>
-						<Label>
-							browse files placeholder make this whole card a button with a magnifier glass icon
-						</Label>
-						<Button Name="browseFiles"
-								Content="Browse Files"
+					<Border CornerRadius="{DynamicResource ControlCornerRadius}">
+						<Button HorizontalAlignment="Stretch"
 								IsEnabled="{Binding EnableBrowseFiles}"
+								BorderBrush="{DynamicResource SurfaceStrokeColorFlyoutBrush}"
+								Height="50"
+								HorizontalContentAlignment="Stretch" Padding="12"
 								Command="{Binding BrowseFilesCommand}"
-								CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" />
-					</StackPanel>
-				</Border>
+								CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+							<DockPanel>
+								<TextBlock Text="Browse Files" FontWeight="SemiBold" Margin="4,0,0,0" />
+								<!--<ui:SymbolIcon Symbol="Find" Margin="6,0,0,0" FontSize="16" />-->
+								<ui:SymbolIcon Symbol="ChevronRight" HorizontalAlignment="Right" />
+							</DockPanel>
+						</Button>
+					</Border>
 
-				<Button HorizontalAlignment="Stretch"
-						IsEnabled="{Binding EnableBrowseFiles}"
-						BorderBrush="{DynamicResource SurfaceStrokeColorFlyoutBrush}"
-						Background="{DynamicResource SolidBackgroundFillColorTertiaryBrush}" Height="50"
-						HorizontalContentAlignment="Stretch" Padding="12"
-						Command="{Binding BrowseFilesCommand}"
-						CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
-					<Button.Resources>
-						
-					</Button.Resources>
-					<Button.Styles>
-						<Style Selector="Button:disabled">
-							<Setter Property="BorderBrush" Value="red" />
-						</Style>
-					</Button.Styles>
-					<DockPanel>
-						<TextBlock Text="Browse Files" FontWeight="SemiBold" Margin="4,0,0,0" />
-						<!--<ui:SymbolIcon Symbol="Find" Margin="6,0,0,0" FontSize="16" />-->
-						<ui:SymbolIcon Symbol="ChevronRight" HorizontalAlignment="Right" />
-					</DockPanel>
-				</Button>
-
-				<Expander Padding="4">
-					<Expander.Header>
-						<StackPanel Orientation="Horizontal" Margin="4,0,0,0">
-							<TextBlock Text="{Binding SelectedFiles.Count}" FontWeight="SemiBold" />
-							<TextBlock Text=" Files" FontWeight="Normal" />
-						</StackPanel>
-					</Expander.Header>
-					<ListBox ItemsSource="{Binding SelectedFiles}">
-						<ListBox.ItemTemplate>
-							<DataTemplate>
-								<Grid ToolTip.Tip="{Binding Path}" Background="Transparent" Margin="-4,0,-4,-4">
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="*" />
-									</Grid.ColumnDefinitions>
-									<TextBlock Grid.Column="0" Text="{Binding Name}" />
-								</Grid>
-							</DataTemplate>
-						</ListBox.ItemTemplate>
-					</ListBox>
-				</Expander>
-
-				<Border Classes="RoundedCard">
-					<DockPanel>
-						<TextBlock VerticalAlignment="Center" Margin="4,0,0,0" FontWeight="SemiBold">
-							Attributes to change
-						</TextBlock>
-						<StackPanel HorizontalAlignment="Right" Orientation="Vertical" Margin="0,-6,0,-6">
-							<CheckBox IsChecked="{Binding ChangeCreationTime}">
-								<TextBlock Text="Created" Margin="0,1,0,0" />
-							</CheckBox>
-							<CheckBox IsChecked="{Binding ChangeModifiedTime}" Margin="0,-4">
-								<TextBlock Text="Modified" Margin="0,1,0,0" />
-							</CheckBox>
-							<CheckBox IsChecked="{Binding ChangeAccessedTime}">
-								<TextBlock Text="Accessed" Margin="0,1,0,0" />
-							</CheckBox>
-						</StackPanel>
-					</DockPanel>
-				</Border>
-
-				<Border Classes="RoundedCard">
-					<StackPanel>
-						<DockPanel Margin="4,0,0,0">
-							<TextBlock Text="New Date" VerticalAlignment="Center" FontWeight="SemiBold" />
-							<CalendarDatePicker x:Name="newDatePicker"
-												HorizontalAlignment="Right"
-												SelectedDate="{Binding NewDate}" />
+					<Border Classes="RoundedCard">
+						<DockPanel>
+							<TextBlock VerticalAlignment="Center" Margin="4,0,0,0" FontWeight="SemiBold">
+							
+							</TextBlock>
+							<StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="0,-6,0,-6" Spacing="8">
+								<CheckBox IsChecked="{Binding ChangeCreationTime}">
+									<TextBlock Text="Created" />
+								</CheckBox>
+								<CheckBox IsChecked="{Binding ChangeModifiedTime}">
+									<TextBlock Text="Modified" />
+								</CheckBox>
+							</StackPanel>
 						</DockPanel>
-						<Separator Margin="0,12" />
-						<DockPanel Margin="4,0,0,0">
-							<TextBlock Text="New Time" VerticalAlignment="Center" FontWeight="SemiBold" />
-							<TimePicker x:Name="newTimePicker"
-										HorizontalAlignment="Right"
-										SelectedTime="{Binding NewTime}"
-									    ClockIdentifier="12HourClock">
-							</TimePicker>
-						</DockPanel>
-					</StackPanel>
-				</Border>
+					</Border>
+
+					<Border Classes="RoundedCard">
+						<StackPanel>
+							<DockPanel Margin="4,0,0,0">
+								<TextBlock Text="New Date" VerticalAlignment="Center" FontWeight="SemiBold" />
+								<CalendarDatePicker x:Name="newDatePicker"
+													HorizontalAlignment="Right"
+													SelectedDate="{Binding NewDate}" />
+							</DockPanel>
+							<Separator Margin="0,12" />
+							<DockPanel Margin="4,0,0,0">
+								<TextBlock Text="New Time" VerticalAlignment="Center" FontWeight="SemiBold" />
+								<TimePicker x:Name="newTimePicker"
+											HorizontalAlignment="Right"
+											SelectedTime="{Binding NewTime}"
+											ClockIdentifier="12HourClock">
+								</TimePicker>
+							</DockPanel>
+						</StackPanel>
+					</Border>
 				
-			</StackPanel>
-		</ScrollViewer>
-
-		<Grid Grid.Row="1" Margin="12">
-			<StackPanel VerticalAlignment="Bottom">
-				<TextBlock Text="Theme" Margin="4,0,0,4" />
-				<ComboBox ItemsSource="{Binding AvailableThemes}"
-						  SelectedItem="{Binding CurrentTheme}" />
-			</StackPanel>
-			<Button Content="Apply" IsEnabled="{Binding EnableApplyChange}"
-					HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="150"
-					Command="{Binding ApplyChangesCommand}" />
+				</StackPanel>
+			</ScrollViewer>
+			
+			<DockPanel DockPanel.Dock="Bottom" Grid.Row="1">
+				<Separator DockPanel.Dock="Top" Margin="0,0,0,12" />
+				<Button DockPanel.Dock="Left" Height="32"
+					Content="{materialIcons:MaterialIconExt	Kind=Brightness6}"
+					Command="{Binding ToggleThemeCommand}" />
+				<Button DockPanel.Dock="Right" Content="Apply"
+						IsEnabled="{Binding EnableApplyChange}"
+						HorizontalAlignment="Right" Width="120"
+						Command="{Binding ApplyChangesCommand}" />
+			</DockPanel>
 		</Grid>
-	</Grid>
+
+		<Border DockPanel.Dock="Right" Classes="RoundedCard" Margin="12,0,0,0">
+			<DockPanel>
+				<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="4,0,0,0">
+					<TextBlock Text="{Binding SelectedFiles.Count}" FontWeight="SemiBold" />
+					<TextBlock Text=" Files" />
+				</StackPanel>
+				<Separator DockPanel.Dock="Top" Margin="0,6,0,12" />
+				<ListBox DockPanel.Dock="Top" ItemsSource="{Binding SelectedFiles}"
+						 Margin="-12,-6" Padding="6">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<Grid ToolTip.Tip="{Binding Path}" Background="Transparent" Margin="-4,0,-4,-4">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Grid.Column="0" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+							</Grid>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</DockPanel>
+		</Border>
+	</DockPanel>
 </Window>

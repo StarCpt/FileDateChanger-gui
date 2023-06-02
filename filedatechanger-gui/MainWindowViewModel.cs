@@ -43,18 +43,6 @@ namespace filedatechangergui
             }
         }
 
-        public bool ChangeAccessedTime
-        {
-            get => changeAccessedTime;
-            set
-            {
-                if (SetValue(ref changeAccessedTime, value))
-                {
-                    RaisePropertyChanged(nameof(EnableApplyChange));
-                }
-            }
-        }
-
         public DateTime NewDate
         {
             get => newDate;
@@ -91,7 +79,7 @@ namespace filedatechangergui
 
         public bool EnableApplyChange
         {
-            get => (ChangeCreationTime || ChangeModifiedTime || ChangeAccessedTime) && SelectedFiles.Count > 0;
+            get => (ChangeCreationTime || ChangeModifiedTime) && SelectedFiles.Count > 0;
         }
 
         public bool EnableBrowseFiles
@@ -108,10 +96,10 @@ namespace filedatechangergui
 
         public ICommand BrowseFilesCommand { get; }
         public ICommand ApplyChangesCommand { get; }
+        public ICommand ToggleThemeCommand { get; }
 
         bool changeCreationTime;
         bool changeModifiedTime;
-        bool changeAccessedTime;
         DateTime newDate;
         TimeSpan newTime;
         bool enableBrowseFiles;
@@ -121,7 +109,6 @@ namespace filedatechangergui
         {
             changeCreationTime = false;
             changeModifiedTime = false;
-            changeAccessedTime = false;
             newDate = DateTime.Now.Date;
             newTime = DateTime.Now.TimeOfDay;
             enableBrowseFiles = true;
@@ -129,6 +116,7 @@ namespace filedatechangergui
 
             BrowseFilesCommand = new Command(ExecuteBrowseFilesCommand);
             ApplyChangesCommand = new Command(ExecuteApplyChangesCommand);
+            ToggleThemeCommand = new Command(ExecuteToggleThemeCommand);
 
             SelectedFiles.CollectionChanged += SelectedFiles_CollectionChanged;
         }
@@ -138,7 +126,7 @@ namespace filedatechangergui
             RaisePropertyChanged(nameof(EnableApplyChange));
         }
 
-        public void ExecuteBrowseFilesCommand(object? param)
+        void ExecuteBrowseFilesCommand(object? param)
         {
             if (param is not Window win)
             {
@@ -149,7 +137,7 @@ namespace filedatechangergui
 
             if (!win.StorageProvider.CanOpen)
             {
-                ShowErrorDialogAsync("Cannot open the file picker dialog", win, delegate { EnableBrowseFiles = true; });
+                ShowErrorDialogAsync("Unable to open the file picker", win, delegate { EnableBrowseFiles = true; });
                 return;
             }
 
@@ -181,7 +169,7 @@ namespace filedatechangergui
                 });
         }
 
-        public void ExecuteApplyChangesCommand(object? param)
+        void ExecuteApplyChangesCommand(object? param)
         {
             foreach (var file in SelectedFiles)
             {
@@ -189,15 +177,19 @@ namespace filedatechangergui
                 if (!File.Exists(path))
                     continue;
 
-                FileInfo handle = new FileInfo(path);
-
                 if (ChangeCreationTime)
-                    handle.CreationTime = NewDate + NewTime;
+                    File.SetCreationTime(path, NewDate + NewTime);
                 if (ChangeModifiedTime)
-                    handle.LastWriteTime = NewDate + NewTime;
-                if (ChangeAccessedTime)
-                    handle.LastAccessTime = NewDate + NewTime;
+                    File.SetLastWriteTime(path, NewDate + NewTime);
             }
+        }
+
+        void ExecuteToggleThemeCommand(object? param)
+        {
+            if (CurrentTheme == ThemeVariant.Light)
+                CurrentTheme = ThemeVariant.Dark;
+            else
+                CurrentTheme = ThemeVariant.Light;
         }
 
         static void ShowErrorDialogAsync(string message, Window owner, TypedEventHandler<ContentDialog, ContentDialogClosingEventArgs>? callback = null)
