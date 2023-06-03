@@ -6,6 +6,7 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <RootNamespace>filedatechangergui</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>filedatechanger-gui.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>portable</DebugType>
@@ -15,6 +16,12 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="filedatechanger-gui.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="filedatechanger-gui.ico" />
   </ItemGroup>
 
   <ItemGroup>

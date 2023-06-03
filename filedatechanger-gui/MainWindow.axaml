@@ -12,7 +12,8 @@
         x:Class="filedatechangergui.MainWindow"
         Title="File Date Changer"
 		MinWidth="550" MinHeight="200"
-		Width="750" Height="450">
+		Width="750" Height="500"
+		Icon="/filedatechanger-gui.ico">
 
 	<Window.DataContext>
 		<local:MainWindowViewModel />
