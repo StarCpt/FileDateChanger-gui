@@ -91,7 +91,6 @@ namespace filedatechangergui
         public ObservableCollection<IStorageFile> SelectedFiles
         {
             get => selectedFiles;
-            //set => SetValue(ref selectedFiles, value);
         }
 
         public ICommand BrowseFilesCommand { get; }
@@ -118,12 +117,7 @@ namespace filedatechangergui
             ApplyChangesCommand = new Command(ExecuteApplyChangesCommand);
             ToggleThemeCommand = new Command(ExecuteToggleThemeCommand);
 
-            SelectedFiles.CollectionChanged += SelectedFiles_CollectionChanged;
-        }
-
-        private void SelectedFiles_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            RaisePropertyChanged(nameof(EnableApplyChange));
+            SelectedFiles.CollectionChanged += delegate { RaisePropertyChanged(nameof(EnableApplyChange)); };
         }
 
         void ExecuteBrowseFilesCommand(object? param)

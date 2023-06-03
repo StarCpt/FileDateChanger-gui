@@ -67,7 +67,6 @@
 								CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
 							<DockPanel>
 								<TextBlock Text="Browse Files" FontWeight="SemiBold" Margin="4,0,0,0" />
-								<!--<ui:SymbolIcon Symbol="Find" Margin="6,0,0,0" FontSize="16" />-->
 								<ui:SymbolIcon Symbol="ChevronRight" HorizontalAlignment="Right" />
 							</DockPanel>
 						</Button>
@@ -75,9 +74,6 @@
 
 					<Border Classes="RoundedCard">
 						<DockPanel>
-							<TextBlock VerticalAlignment="Center" Margin="4,0,0,0" FontWeight="SemiBold">
-							
-							</TextBlock>
 							<StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="0,-6,0,-6" Spacing="8">
 								<CheckBox IsChecked="{Binding ChangeCreationTime}">
 									<TextBlock Text="Created" />
@@ -113,7 +109,7 @@
 			</ScrollViewer>
 			
 			<DockPanel DockPanel.Dock="Bottom" Grid.Row="1">
-				<Separator DockPanel.Dock="Top" Margin="0,0,0,12" />
+				<Separator DockPanel.Dock="Top" Margin="0,12,0,12" />
 				<Button DockPanel.Dock="Left" Height="32"
 					Content="{materialIcons:MaterialIconExt	Kind=Brightness6}"
 					Command="{Binding ToggleThemeCommand}" />
@@ -136,9 +132,6 @@
 					<ListBox.ItemTemplate>
 						<DataTemplate>
 							<Grid ToolTip.Tip="{Binding Path}" Background="Transparent" Margin="-4,0,-4,-4">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="*" />
-								</Grid.ColumnDefinitions>
 								<TextBlock Grid.Column="0" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
 							</Grid>
 						</DataTemplate>

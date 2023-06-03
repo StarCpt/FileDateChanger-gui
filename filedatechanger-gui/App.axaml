@@ -8,6 +8,5 @@
     <Application.Styles>
 		<sty:FluentAvaloniaTheme PreferUserAccentColor="True" />
 		<materialIcons:MaterialIconStyles />
-        <!--<FluentTheme Mode="Light"/>-->
     </Application.Styles>
 </Application>
